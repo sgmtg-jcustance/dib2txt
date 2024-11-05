@@ -1,6 +1,6 @@
 {
   "name": "copydib2txt",
-  "displayName": "Copy PolyGlot Notebook to TXT",
+  "displayName": "Copy DIB to TXT",
   "publisher": "SpyglassMTG",
   "description": "Copies a .DIB to .TXT when saved.",
   "author": {
@@ -26,8 +26,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "DIB2TXT.CopyFile",
-        "title": "Copy .DIB Notebook to .TXT File"
+        "command": "CopyDIB2TXT.CopyFile",
+        "title": "Copy DIB to TXT"
       }
     ]
   },
