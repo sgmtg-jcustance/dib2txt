@@ -3,9 +3,9 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 export function activate(context: vscode.ExtensionContext) {
-	console.info('My Extensioni is active')
-    let disposable = vscode.workspace.onDidSaveTextDocument((document: vscode.TextDocument) => {
-        if (document.fileName.endsWith('.dib')) {
+	console.info('DIB2TXT Extension Active')
+    let disposable = vscode.workspace.onDidSaveNotebookDocument((document: vscode.NotebookDocument) => {
+        if (document.uri.fsPath.endsWith('.dib')) {
 			console.info('A DIB Document was saved');
             const dibFilePath = document.uri.fsPath;
             const txtFilePath = dibFilePath.replace(/\.dib$/, '.dib.src');
