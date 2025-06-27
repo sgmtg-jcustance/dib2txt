@@ -35,23 +35,32 @@ __export(extension_exports, {
 });
 module.exports = __toCommonJS(extension_exports);
 var vscode = __toESM(require("vscode"));
-var fs = __toESM(require("fs"));
+var import_fs = require("fs");
+var path = __toESM(require("path"));
 function activate(context) {
   console.info("DIB2TXT Extension Active");
-  let disposable = vscode.workspace.onDidSaveNotebookDocument((document) => {
+  let disposable = vscode.workspace.onDidSaveNotebookDocument(async (document) => {
     if (document.uri.fsPath.endsWith(".dib")) {
       console.info("A DIB Document was saved");
-      const dibFilePath = document.uri.fsPath;
-      const txtFilePath = dibFilePath.replace(/\.dib$/, ".dib.src");
-      fs.copyFile(dibFilePath, txtFilePath, (err) => {
-        if (err) {
-          console.error("An error occured copying file");
-          vscode.window.showErrorMessage(`Failed to save .txt file: ${err.message}`);
-        } else {
-          console.info("A copy of the dib was saved as .txt");
-          vscode.window.showInformationMessage(`Saved .txt file: ${txtFilePath}`);
+      try {
+        const config = vscode.workspace.getConfiguration("dib2txt");
+        const outputExtension = config.get("outputExtension", ".txt");
+        const showNotifications = config.get("showNotifications", true);
+        const dibFilePath = document.uri.fsPath;
+        const txtFilePath = dibFilePath.replace(/\.dib$/, outputExtension);
+        if (!dibFilePath || !txtFilePath || dibFilePath === txtFilePath) {
+          throw new Error("Invalid file path or extension");
         }
-      });
+        await import_fs.promises.copyFile(dibFilePath, txtFilePath);
+        console.info(`DIB file copied to: ${txtFilePath}`);
+        if (showNotifications) {
+          vscode.window.showInformationMessage(`Saved ${outputExtension} file: ${path.basename(txtFilePath)}`);
+        }
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : "Unknown error";
+        console.error("An error occurred copying file:", errorMessage);
+        vscode.window.showErrorMessage(`Failed to save text file: ${errorMessage}`);
+      }
     }
   });
   context.subscriptions.push(disposable);

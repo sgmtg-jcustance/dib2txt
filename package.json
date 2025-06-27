@@ -12,7 +12,7 @@
     "type": "git",
     "url": "https://github.com/sgmtg-jcustance/dib2txt"
   },
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.95.0"
   },
@@ -24,12 +24,22 @@
   ],
   "main": "./dist/extension.js",
   "contributes": {
-    "commands": [
-      {
-        "command": "CopyDibNB2Txt.CopyFile",
-        "title": "Copy DIB Notebook to Text File"
+    "configuration": {
+      "title": "Copy DIB to TXT",
+      "properties": {
+        "dib2txt.outputExtension": {
+          "type": "string",
+          "default": ".txt",
+          "description": "File extension for the output text file",
+          "pattern": "^\\.[a-zA-Z0-9]+$"
+        },
+        "dib2txt.showNotifications": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show notification messages when files are copied"
+        }
       }
-    ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run package",
